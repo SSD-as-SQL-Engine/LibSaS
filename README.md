@@ -8,11 +8,24 @@ Proc. VLDB Endow. 14, 9 (May 2021), 1481–1488.
 
 ## Prerequisite 
 
+- Cosmos+ Board (SaS firmware)
+- 
+
 
 ## Build
 
+```bash
+mkdir build
+CC=gcc CXX=g++ cmake .. -DCMAKE_BUILD_TYPE=Release
+cd build
+```
 
 ## Run
+
+```
+cd bin
+./
+```
 
 
 
