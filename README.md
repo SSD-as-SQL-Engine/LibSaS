@@ -20,12 +20,20 @@ CC=gcc CXX=g++ cmake .. -DCMAKE_BUILD_TYPE=Release
 cd build
 ```
 
-## Run
+## How to use `LibSaS` 
+
+```bash
+g++ test.c -I {PATH}/LibSaS/include -lLibSaS -L {PATH}/LibSaS/lib/
+```
+
+## Run (Test code)
 
 ```
 cd bin
-./
+./TestLibSaS
 ```
+
+
 
 
 
