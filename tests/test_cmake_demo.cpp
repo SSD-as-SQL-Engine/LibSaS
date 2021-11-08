@@ -1,5 +1,7 @@
 #define CATCH_CONFIG_MAIN
 
+
+/*
 #include "catch.hpp"
 #include <source_file.hpp>
 #include <string>
@@ -22,3 +24,4 @@ TEST_CASE("Test add", "[unit-test]"){
     REQUIRE(add(a,b) == c);
 
 }
+*/

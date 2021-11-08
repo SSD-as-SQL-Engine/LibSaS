@@ -14,9 +14,10 @@ set(CMAKE_CXX_STANDARD 11)
 
 # Set the project name and version number. This allows for a user of your
 # library or tool to specify a particular version when they include it, as in 
-#   find_package(CMakeDemo 1.0 REQUIRED)
-project(CMakeDemo VERSION 1.0)
-set(CMakeDemo_VERSION 1.0)
+#   find_package(LibSaS 1.0 REQUIRED)
+
+project(LibSaS VERSION 1.0)
+set(LibSaS_VERSION 1.0)
 
 # enable unit testing via "make test" once the code has been compiled.
 include(CTest)
@@ -37,7 +38,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin")
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/lib")
 
 # Find LAPACK on the system. This is mostly for demonstration.
-find_package(LAPACK REQUIRED)
+#find_package(LAPACK REQUIRED)
 
 # Include source code and headers. This calls the CMakeLists.txt in each
 # subdirectory. These can define their own libraries, executables, etc. as targets, 
@@ -59,21 +60,21 @@ if(BUILD_TESTING)
     add_subdirectory(tests)
 endif()
 
-# Add the library CMakeDemo as a target, with the contents of src/ and include/
+# Add the library LibSaS as a target, with the contents of src/ and include/
 # as dependencies.
-add_library(CMakeDemo STATIC ${CMakeDemo_SRC} ${CMakeDemo_INC})
+add_library(LibSaS STATIC ${LibSaS_SRC} ${LibSaS_INC})
 
 # These variables slightly modify the install location to allow for version
 # specific installations.
-set(CMakeDemo_INCLUDE_DEST "include/CMakeDemo-${CMakeDemo_VERSION}")
-set(CMakeDemo_LIB_DEST "lib/CMakeDemo-${CMakeDemo_VERSION}")
+set(LibSaS_INCLUDE_DEST "include/LibSaS-${LibSaS_VERSION}")
+set(LibSaS_LIB_DEST "lib/LibSaS-${LibSaS_VERSION}")
 
 
 # generator expressions are needed for the include directories, since installing headers changes the include path
-# Specify that CMakeDemo requires the files located in the include/ directory at
+# Specify that LibSaS requires the files located in the include/ directory at
 # compile time. This would normally look like 
-#   target_include_directories(CMakeDemo PUBLIC include/)
-# PUBLIC means that other libraries including CMakeDemo should also include the
+#   target_include_directories(LibSaS PUBLIC include/)
+# PUBLIC means that other libraries including LibSaS should also include the
 # directory include/.
 # However, there is a catch. If we are installing the project in
 # CMAKE_INSTALL_PREFIX, we can't specify include/ in the build directory: we have 
@@ -82,22 +83,22 @@ set(CMakeDemo_LIB_DEST "lib/CMakeDemo-${CMakeDemo_VERSION}")
 # CMake command handles this. $<BUILD_INTERFACE:...> and
 # $<INSTALL_INTERFACE:...> are macros whose values change depending on if we are
 # simply building the code or if we are installing it.
-target_include_directories(CMakeDemo PUBLIC
+target_include_directories(LibSaS PUBLIC
    # headers to include when building from source
-   $<BUILD_INTERFACE:${CMakeDemo_SOURCE_DIR}/include> 
-   $<BUILD_INTERFACE:${CMakeDemo_BINARY_DIR}/include> 
+   $<BUILD_INTERFACE:${LibSaS_SOURCE_DIR}/include> 
+   $<BUILD_INTERFACE:${LibSaS_BINARY_DIR}/include> 
 
    # headers to include when installing  (implicitly prefixes with ${CMAKE_INSTALL_PREFIX}).
    $<INSTALL_INTERFACE:include> 
    )
 
-# Specify that CMakeDemo requires LAPACK to link properly. Ideally, LAPACK would
+# Specify that LibSaS requires LAPACK to link properly. Ideally, LAPACK would
 # specify LAPACK::LAPACK for linking so that we can avoid using the variables.
 # However, each package is different and one must check the documentation to 
 # see what variables are defined.
-target_link_libraries(CMakeDemo ${LAPACK_LIBRARIES})
+target_link_libraries(LibSaS ${LAPACK_LIBRARIES})
 
-# Install CMakeDemo in CMAKE_INSTALL_PREFIX (defaults to /usr/local on linux). 
+# Install LibSaS in CMAKE_INSTALL_PREFIX (defaults to /usr/local on linux). 
 # To change the install location, run 
 #   cmake -DCMAKE_INSTALL_PREFIX=<desired-install-path> ..
 
@@ -105,66 +106,66 @@ target_link_libraries(CMakeDemo ${LAPACK_LIBRARIES})
 # location of installed files on the system, user permissions, build
 # configurations, etc. Here, we are only copying files.
 # install(TARGETS ...) specifies rules for installing targets. 
-# Here, we are taking a target or list of targets (CMakeDemo) and telling CMake
+# Here, we are taking a target or list of targets (LibSaS) and telling CMake
 # the following:
-#   - put shared libraries associated with CMakeDemo in ${CMakeDemo_LIB_DEST}
-#   - put static libraries associated with CMakeDemo in ${CMakeDemo_LIB_DEST}
-#   - put include files associated with CMakeDemo in ${CMakeDemo_INCLUDE_DEST}
-# We also need to specify the export that is associated with CMakeDemo; an export 
+#   - put shared libraries associated with LibSaS in ${LibSaS_LIB_DEST}
+#   - put static libraries associated with LibSaS in ${LibSaS_LIB_DEST}
+#   - put include files associated with LibSaS in ${LibSaS_INCLUDE_DEST}
+# We also need to specify the export that is associated with LibSaS; an export 
 # is just a list of targets to be installed.
-# So we are associating CMakeDemo with CMakeDemoTargets.
+# So we are associating LibSaS with LibSaSTargets.
 install(
     # targets to install
-    TARGETS CMakeDemo 
+    TARGETS LibSaS 
     # name of the CMake "export group" containing the targets we want to install
-    EXPORT CMakeDemoTargets
+    EXPORT LibSaSTargets
     # Dynamic, static library and include destination locations after running
     # "make install"
-    LIBRARY DESTINATION ${CMakeDemo_LIB_DEST}
-    ARCHIVE DESTINATION ${CMakeDemo_LIB_DEST} 
-    INCLUDES DESTINATION ${CMakeDemo_INCLUDE_DEST}
+    LIBRARY DESTINATION ${LibSaS_LIB_DEST}
+    ARCHIVE DESTINATION ${LibSaS_LIB_DEST} 
+    INCLUDES DESTINATION ${LibSaS_INCLUDE_DEST}
     )
 
-# We now need to install the export CMakeDemoTargets that we defined above. This
-# is needed in order for another project to import CMakeDemo using 
-#   find_package(CMakeDemo)
-# find_package(CMakeDemo) will look for CMakeDemo-config.cmake to provide
-# information about the targets contained in the project CMakeDemo. Fortunately,
-# this is specified in the export CMakeDemoTargets, so we will install this too.
+# We now need to install the export LibSaSTargets that we defined above. This
+# is needed in order for another project to import LibSaS using 
+#   find_package(LibSaS)
+# find_package(LibSaS) will look for LibSaS-config.cmake to provide
+# information about the targets contained in the project LibSaS. Fortunately,
+# this is specified in the export LibSaSTargets, so we will install this too.
 # install(EXPORT ...) will install the information about an export. Here, we
-# save it to a file {$CMakeDemo_LIB_DEST}/CMakeDemoTargets.cmake and prepend 
-# everything inside CMakeDemoTargets  with the namespace CMakeDemo::.
+# save it to a file {$LibSaS_LIB_DEST}/LibSaSTargets.cmake and prepend 
+# everything inside LibSaSTargets  with the namespace LibSaS::.
 install(
     # The export we want to save (matches name defined above containing the
     # install targets)
-    EXPORT CMakeDemoTargets
+    EXPORT LibSaSTargets
     # CMake file in which to store the export's information
-    FILE  CMakeDemoTargets.cmake
+    FILE  LibSaSTargets.cmake
     # Namespace prepends all targets in the export (when we import later, we
-    # will use CMakeDemo::CMakeDemo)
-    NAMESPACE CMakeDemo::
+    # will use LibSaS::LibSaS)
+    NAMESPACE LibSaS::
     # where to place the resulting file (here, we're putting it with the library)
-    DESTINATION ${CMakeDemo_LIB_DEST}
+    DESTINATION ${LibSaS_LIB_DEST}
     )
 
 # install(FILES ...) simply puts files in a certain place with certain
 # properties. We're just copying them to the desired place here.
-install(FILES ${CMakeDemo_INC} DESTINATION ${CMakeDemo_INCLUDE_DEST})
+install(FILES ${LibSaS_INC} DESTINATION ${LibSaS_INCLUDE_DEST})
 
 # Write a "version file" in case some wants to only load a particular version of
-# CMakeDemo @BUG this fails at the moment.
+# LibSaS @BUG this fails at the moment.
 include(CMakePackageConfigHelpers)
 write_basic_package_version_file(
-    CMakeDemoConfigVersion.cmake
-    VERSION ${CMakeDemo_VERSION}
+    LibSaSConfigVersion.cmake
+    VERSION ${LibSaS_VERSION}
     COMPATIBILITY AnyNewerVersion
     )
 
 # Copies the resulting CMake config files to the installed library directory
 install(
     FILES 
-        "cmake/CMakeDemo-config.cmake"
-        "${CMAKE_CURRENT_BINARY_DIR}/CMakeDemoConfigVersion.cmake"
-    DESTINATION ${CMakeDemo_LIB_DEST}
+        "cmake/LibSaS-config.cmake"
+        "${CMAKE_CURRENT_BINARY_DIR}/LibSaSConfigVersion.cmake"
+    DESTINATION ${LibSaS_LIB_DEST}
     )
 
