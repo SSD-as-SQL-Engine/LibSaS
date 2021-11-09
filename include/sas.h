@@ -20,7 +20,9 @@ class SaS {
      SQLITE_STAT stat;
 
   public:
+    SaS() = default;
     SaS(std::string device): device(device) {};
+
     void open(std::string);
     void close();
     void executeQuery(std::string query);
