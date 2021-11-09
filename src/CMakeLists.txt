@@ -14,6 +14,7 @@ set(LibSaS_SRC
     nvme_main.c
     sqlite_api.c
     sas.cc
+    sas_network.cc
     )
 
 # Form the full path to the source files...
