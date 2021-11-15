@@ -218,3 +218,4 @@ int main (int argc, char **argv) {
 	fclose(query);
 	return 0;
 }
+

@@ -70,69 +70,6 @@ int init_ioctl () {
 	return 0;
 }
 
-// multi client
-int submit_ioctl_multi (int fd, int opcode, const char* query, __u32 data_len, __u32 lba, int isQuery, int clientNo, char** result) {
-  __u32 dword13;
-
-  if (isQuery == 1) {
-    dword13 = QUERY_FLAG;
-  } else if (isQuery == 2) {
-    dword13 = BIND_FLAG;
-  } else if (isQuery == 3) {
-    dword13 = PARAMETER_FLAG;
-  } else {
-    dword13 = 0;
-  }
-
-  // put clientNo info
-  dword13 += clientNo;
-  fprintf(stderr, "dword13: %u clientNo: %d\n", dword13, clientNo);
-
-  memset (ioctl_buf, 0, 4096);
-
-  if (query && opcode == 1) {
-    //fprintf(stderr, "current query: %s length: %ld\n", query, strlen(query));
-    strcpy ((char*)ioctl_buf, query);
-  }
-
-#ifdef DEBUG
-  // print command setting when compiled with DEBUG option.
-  show_command (opcode, ioctl_buf, data_len, lba, isQuery);
-#endif
-
-  struct nvme_passthru_cmd cmd = {
-    .opcode   = opcode,
-    .flags    = 0,
-    .rsvd1    = 0,
-    .nsid   = 0,
-    .cdw2   = 0,
-    .cdw3   = 0,
-    .metadata = 0,
-    .addr   = (__u64)(uintptr_t) ioctl_buf,
-    .metadata_len = 0,
-    .data_len = data_len,
-    .cdw10    = lba,
-    .cdw11    = 0,
-    .cdw12    = 0,
-    .cdw13    = dword13,
-    .cdw14    = 0,
-    .cdw15    = 0,
-    .timeout_ms = 0,
-    .result   = 0,
-  };
-
-  int err = ioctl(fd, NVME_IOCTL_IO_CMD, &cmd);
-
-  if(err==0 && opcode==2) {
-    *result = (char*) ioctl_buf;
-  } else {
-  //  *result = NULL;
-  }
-
-  return err;
-}
-
-
 int submit_ioctl (int fd, int opcode, const char* query, __u32 data_len, __u32 lba, int isQuery,  char** result) {
 	__u32 dword13;
 

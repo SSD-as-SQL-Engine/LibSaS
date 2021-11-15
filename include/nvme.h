@@ -26,7 +26,7 @@ typedef struct _SQLITE_RESULT {
 
 int init_ioctl();
 int submit_ioctl(int fd, int opcode, const char* query, __u32 data_len, __u32 lba, int isQuery, char ** result);
-
+int submit_ioctl_multi (int fd, int opcode, const char* query, __u32 data_len, __u32 lba, int isQuery, int clientNo, char** result);
 
 // parsing
 void get_header (SQLITE_RESULT* sqliteResult);

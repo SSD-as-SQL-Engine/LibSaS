@@ -18,7 +18,7 @@ void SaS::close() {
   device = "";
 }
 
-void SaS::executeQuery(std::string query) {
+void SaS::executeQuery(std::string query, int index) {
   int err = 0, colCnt = 0;
   char* result;
   SQLITE_RESULT sqliteResult;
@@ -32,9 +32,19 @@ void SaS::executeQuery(std::string query) {
   init_ioctl();
 
   // execute query
-  err = submit_ioctl(fd, IO_NVM_WRITE, query.c_str(), 4096, MAGIC_NUM, 1, NULL);
-  if (err !=0) {
-    printf("[DEBUG] WRITE ERROR While submitting Query err: %d\n",err);
+
+  if (index==-1) {
+    // single user version
+    err = submit_ioctl(fd, IO_NVM_WRITE, query.c_str(), 4096, MAGIC_NUM, 1, NULL);
+    if (err !=0) {
+      printf("[DEBUG] WRITE ERROR While submitting Query err: %d\n",err);
+    }
+  } else {
+    // multi user version
+    err = submit_ioctl_multi(fd, IO_NVM_WRITE, query.c_str(), 4096, MAGIC_NUM, 1, index, NULL);
+    if (err != 0) {
+      printf("[DEBUG] WRITE ERROR While submitting Query err: %d\n",err);
+    }
   }
   stat.num_queries++;
 

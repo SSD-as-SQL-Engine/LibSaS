@@ -39,7 +39,7 @@ class SaS {
 
     void open(std::string);
     void close();
-    void executeQuery(std::string query);
+    void executeQuery(std::string query, int index=-1);
 };
 
 // network version class
